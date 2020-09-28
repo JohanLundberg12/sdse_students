@@ -3,6 +3,10 @@ package edu.sdse.csvprocessor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CityCSVProcessor {
 	
@@ -13,7 +17,9 @@ public class CityCSVProcessor {
 			br.readLine();
 			
 			String line;
-			
+			List<CityRecord> cityRecordList;
+			Map<String, List<CityRecord>> cityMap = new HashMap<>();
+
 			while ((line = br.readLine()) != null) {
 				// Parse each line
 				String[] rawValues = line.split(",");
@@ -23,14 +29,40 @@ public class CityCSVProcessor {
 				String city = convertToString(rawValues[2]);
 				int population = convertToInt(rawValues[3]);
 				
+				CityRecord cityRecord = new CityRecord(id, year, city, population);
 
-				CityRecord cityRecord = new CityRecord();
-				cityRecord.id = id;
-				cityRecord.year = year;
-				cityRecord.city = city;
-				cityRecord.population = population;
-				cityRecord.toString();
+				if (cityMap.containsKey(cityRecord.city)) {
+					cityRecordList = cityMap.get(cityRecord.city);
+					cityRecordList.add(cityRecord);
+				} else {
+					cityRecordList= new ArrayList<>();
+					cityRecordList.add(cityRecord);
+					cityMap.put(cityRecord.city, cityRecordList);
+				}
+
 			}
+
+			for (Map.Entry<String, List<CityRecord>> entry : cityMap.entrySet()) {
+				int nrEntries = 0;
+				int minYear = Integer.MAX_VALUE;
+				int maxYear = 0;
+				int avgPop = 0;
+			    for (CityRecord record : entry.getValue()) {
+					nrEntries++;
+					if (record.year < minYear) {
+						minYear = record.year;
+					}
+					if (record.year > maxYear) {
+						maxYear = record.year;
+					}
+					avgPop += record.population;
+				}
+			    avgPop = avgPop / nrEntries;
+			    System.out.println("Average population of " + entry.getKey() + " (" + minYear + "-" + maxYear + ";"
+						+ nrEntries + " entries): " + avgPop );
+			}
+
+
 		} catch (Exception e) {
 			System.err.println("An error occurred:");
 			e.printStackTrace();
@@ -56,7 +88,7 @@ public class CityCSVProcessor {
 		return rawValue;
 	}
 	
-	public static final void main(String[] args) {
+	public static void main(String[] args) {
 		CityCSVProcessor reader = new CityCSVProcessor();
 		
 		File dataDirectory = new File("data/");

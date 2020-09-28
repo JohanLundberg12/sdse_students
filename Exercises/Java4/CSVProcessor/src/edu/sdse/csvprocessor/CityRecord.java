@@ -6,8 +6,15 @@ public class CityRecord {
     String city;
     int population;
 
+    public CityRecord(int id, int year, String city, int population) {
+        this.id = id;
+        this.year = year;
+        this.city = city;
+        this.population = population;
+    }
+
     public String toString(){
-        System.out.println("id: " + id + ", year: " + year + ", city: " + city + ", population: " + population);
-        return null;
+
+        return "id: " + id + ", year: " + year + ", city: " + city + ", population: " + population;
     }
 }
