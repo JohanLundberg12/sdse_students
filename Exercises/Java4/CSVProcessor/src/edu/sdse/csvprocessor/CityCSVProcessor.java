@@ -23,9 +23,13 @@ public class CityCSVProcessor {
 				String city = convertToString(rawValues[2]);
 				int population = convertToInt(rawValues[3]);
 				
-				System.out.println("id: " + id + ", year: " + year + ", city: " + city + ", population: " + population);
-				
-				//TODO: Extend the program to process entries!
+
+				CityRecord cityRecord = new CityRecord();
+				cityRecord.id = id;
+				cityRecord.year = year;
+				cityRecord.city = city;
+				cityRecord.population = population;
+				cityRecord.toString();
 			}
 		} catch (Exception e) {
 			System.err.println("An error occurred:");
